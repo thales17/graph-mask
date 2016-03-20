@@ -1,0 +1,96 @@
+<html>
+  <head>
+      <style>
+        body {
+          background-color: #000000;
+          margin: 0px;
+          overflow: hidden;
+        }
+      </style>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+    <script type="text/javascript">
+      var canvas, ctx, points;
+
+      function init() {
+        console.log('Init');
+        canvas = document.getElementById('myCanvas');
+        ctx = canvas.getContext('2d');
+
+        onWindowResize();
+        window.addEventListener('resize', onWindowResize, false);
+        
+        animate();
+      }
+
+      function onWindowResize(ev) {
+        console.log('Window Resize');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+      }
+
+      function draw() {
+        //console.log('Draw');
+        //Clear and draw on the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00FF00';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        var inset = Math.ceil(canvas.width * 0.05);
+
+        ctx.strokeStyle = '#000000';
+        ctx.fillStyle = '#0000FF';
+        ctx.beginPath();
+        ctx.moveTo(inset, inset);
+        ctx.lineTo(canvas.width - inset, inset);
+        ctx.lineTo(canvas.width - inset, canvas.height - inset); 
+        
+        //Crazy Graph Line
+        var numPoints = Math.floor((canvas.width - (inset * 2)) * 0.025);
+        if(!points) points = [];
+       
+        console.log('numPoints', numPoints);
+        var yMin = canvas.height - (inset * 2);
+        var yMax = canvas.height - 2;
+        
+        for(var i = 1; i < numPoints - 2; i++) {
+          if(!points[i]) points[i] = {x: 0, y: 0};
+          if(!points[i].y) {
+            points[i].y = Math.floor(Math.random() * (yMax - yMin)) + yMin;
+          } else {
+            points[i].y += (Math.random() > 0.5) ? 3 : -3;
+            points[i].y = Math.min(yMax, points[i].y);
+            points[i].y = Math.max(yMin, points[i].y);
+          }
+
+          if(!points[i].x) points[i].x = (canvas.width - inset) - (i * numPoints);
+
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+
+        ctx.lineTo(inset, canvas.height - inset);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+        
+      }
+
+      function animate() {
+        console.log('Animate');
+        draw();
+        //Per Frame Update code
+
+
+        requestAnimationFrame(animate);
+      }
+
+      init();
+
+    </script>
+  </body>
+</html>
+
+          
+
