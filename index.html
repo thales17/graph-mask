@@ -67,8 +67,14 @@
           }
 
           if(!points[i].x) points[i].x = (canvas.width - inset) - (i * pointSpacing);
-
-          ctx.lineTo(points[i].x, points[i].y);
+          
+          //Line
+          //ctx.lineTo(points[i].x, points[i].y);
+          
+          //Bezier Curve
+          var lastX = (i > 1) ? points[i-1].x : canvas.width - inset;
+          var lastY = (i > 1) ? points[i-1].y : canvas.height - inset;
+          ctx.bezierCurveTo(lastX, points[i].y, points[i].x, points[i].y, points[i].x, lastY);
         }
 
         ctx.lineTo(inset, canvas.height - inset);
